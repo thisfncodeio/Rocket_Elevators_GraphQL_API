@@ -11541,11 +11541,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/mnt/c/Users/Don/GraphQL/GraphQL_API.csproj",
+      "projectUniqueName": "/mnt/c/Users/Don/Rocket_Elevators_GraphQL_API/GraphQL_API.csproj",
       "projectName": "GraphQL_API",
-      "projectPath": "/mnt/c/Users/Don/GraphQL/GraphQL_API.csproj",
+      "projectPath": "/mnt/c/Users/Don/Rocket_Elevators_GraphQL_API/GraphQL_API.csproj",
       "packagesPath": "/home/don/.nuget/packages/",
-      "outputPath": "/mnt/c/Users/Don/GraphQL/obj/",
+      "outputPath": "/mnt/c/Users/Don/Rocket_Elevators_GraphQL_API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/don/.nuget/NuGet/NuGet.Config"
