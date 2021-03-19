@@ -45,21 +45,21 @@ namespace GraphQL_API
             services.AddScoped<IDependencyResolver>(_ => new FuncDependencyResolver(_.GetRequiredService));
             services.AddScoped<IDocumentExecuter, DocumentExecuter>();
             
-            services.AddScoped<BuildingType>();
-            services.AddScoped<AddressType>();
-            services.AddScoped<FactInterventionType>();
-            services.AddScoped<EmployeeType>();
-            services.AddScoped<BuildingsDetailType>();
-            services.AddScoped<CustomerType>();
-            services.AddScoped<BatteryType>();
-            services.AddScoped<ColumnType>();
-            services.AddScoped<ElevatorType>();
+            services.AddScoped<BuildingsType>();
+            services.AddScoped<AddressesType>();
+            services.AddScoped<FactInterventionsType>();
+            services.AddScoped<EmployeesType>();
+            services.AddScoped<BuildingsDetailsType>();
+            services.AddScoped<CustomersType>();
+            services.AddScoped<BatteriesType>();
+            services.AddScoped<ColumnsType>();
+            services.AddScoped<ElevatorsType>();
 
             services.AddScoped<FactInterventionQuery>();
 
             services.AddScoped<ISchema, GraphQLSchema>();
         
-            services.AddDbContext<RailsApp_developmentContext>(options =>
+            services.AddDbContext<RailsApp_development_dbContext>(options =>
                 options.UseMySql(connectionMSQL));
 
            services.AddDbContext<warehouse_developmentContext>(options => 

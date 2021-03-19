@@ -12,28 +12,28 @@ namespace GraphQL_API.Entities
         {
         }
 
-        public   warehouse_developmentContext(DbContextOptions<  warehouseContext> options)
+        public   warehouse_developmentContext(DbContextOptions<warehouse_developmentContext> options)
             : base(options)
         {
         }
-        public virtual DbSet<DimCustomer> DimCustomerss { get; set; }
-        public virtual DbSet<FactContact> FactContacts { get; set; }
-        public virtual DbSet<FactElevator> FactElevators { get; set; }
-        public virtual DbSet<FactIntervention> FactInterventions { get; set; }
-        public virtual DbSet<FactQuote> FactQuotes { get; set; }
+        public virtual DbSet<DimCustomers> DimCustomerss { get; set; }
+        public virtual DbSet<FactContacts> FactContacts { get; set; }
+        public virtual DbSet<FactElevators> FactElevators { get; set; }
+        public virtual DbSet<FactInterventions> FactInterventions { get; set; }
+        public virtual DbSet<FactQuotes> FactQuotes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=codeboxx-postgresql.cq6zrczewpu2.us-east-1.rds.amazonaws.com;Database=warehouse_development;Username=codeboxx;Password=Codeboxx1!");
+                optionsBuilder.UseNpgsql("Host=localhost;Port=3306;Database=warehouse_development;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<DimCustomer>(entity =>
+            modelBuilder.Entity<DimCustomers>(entity =>
             {
                 entity.ToTable("dim_customers");
 
@@ -62,7 +62,7 @@ namespace GraphQL_API.Entities
                     .HasColumnName("customer_city");
             });
 
-            modelBuilder.Entity<FactContact>(entity =>
+            modelBuilder.Entity<FactContacts>(entity =>
             {
                 entity.ToTable("fact_contacts");
 
@@ -87,7 +87,7 @@ namespace GraphQL_API.Entities
                     .HasColumnName("project_name");
             });
 
-            modelBuilder.Entity<FactElevator>(entity =>
+            modelBuilder.Entity<FactElevators>(entity =>
             {
                 entity.ToTable("fact_elevators");
 
@@ -115,7 +115,7 @@ namespace GraphQL_API.Entities
                     .HasColumnType("character varying")
                     .HasColumnName("serial_number");
             });
-            modelBuilder.Entity<FactIntervention>(entity =>
+            modelBuilder.Entity<FactInterventions>(entity =>
             {
                 entity.ToTable("fact_intervention");
 
@@ -146,7 +146,7 @@ namespace GraphQL_API.Entities
                     .HasColumnName("status");
 
             });
-            modelBuilder.Entity<FactQuote>(entity =>
+            modelBuilder.Entity<FactQuotes>(entity =>
             {
                 entity.ToTable("fact_quotes");
 

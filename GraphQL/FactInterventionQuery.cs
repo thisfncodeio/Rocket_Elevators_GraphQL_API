@@ -8,9 +8,9 @@ namespace GraphQL_API.GraphQL
 {
   public class FactInterventionQuery : ObjectGraphType
   {
-    public FactInterventionQuery(warehouse_developmentContext db, dbContext _db)
+    public FactInterventionQuery(warehouse_developmentContext db, RailsApp_development_dbContext _db)
     {
-      Field<FactInterventionType>(
+      Field<FactInterventionsType>(
         "interventionQuery",
 
         arguments: new QueryArguments(
@@ -26,7 +26,7 @@ namespace GraphQL_API.GraphQL
           return intervention;
         });
 
-        Field<EmployeeType>(
+        Field<EmployeesType>(
         "employeeQuery",
 
         arguments: new QueryArguments(
@@ -36,13 +36,13 @@ namespace GraphQL_API.GraphQL
         {
           var id = context.GetArgument<long>("id");
           var employee = _db
-            .Employees
+            .Employee
             .ToListAsync();
 
           return employee;
         });
 
-        Field<ListGraphType<EmployeeType>>(
+        Field<ListGraphType<EmployeesType>>(
         "allemployeesQuery",
 
         //arguments:// new QueryArguments(
@@ -52,13 +52,13 @@ namespace GraphQL_API.GraphQL
         {
           //var id = context.GetArgument<long>("id");
           var employees = _db
-            .Employees
+            .Employee
             .ToListAsync();
 
           return employees;
         });
 
-        Field<BuildingType>(
+        Field<BuildingsType>(
         "buildingQuery",
 
         arguments: new QueryArguments(
@@ -68,7 +68,7 @@ namespace GraphQL_API.GraphQL
         {
           var id = context.GetArgument<long>("id");
           var building = _db
-            .Buildings
+            .Building
             .Include(x => x.Address)
             //.Include(x => x.Customer)
             .FirstOrDefault(i => i.Id == id);
@@ -76,7 +76,7 @@ namespace GraphQL_API.GraphQL
           return building;
         });
 
-        Field<ListGraphType<ElevatorType>>(
+        Field<ListGraphType<ElevatorsType>>(
         "elevatorQuery",
 
         arguments: new QueryArguments(
@@ -86,14 +86,14 @@ namespace GraphQL_API.GraphQL
         {
           var id = context.GetArgument<long>("id");
           var elevators = _db
-            .Elevators
+            .Elevator
             .Where(_=>_.column_id == id)
                             .ToListAsync();
 
           return elevators;
         });
 
-        Field<ListGraphType<ColumnType>>(
+        Field<ListGraphType<ColumnsType>>(
         "columnQuery",
 
         arguments: new QueryArguments(
@@ -103,15 +103,15 @@ namespace GraphQL_API.GraphQL
         {
           var id = context.GetArgument<long>("id");
           var columns = _db
-            .Columns
+            .Column
             .Where(_=>_.battery_id == id)
                             .ToListAsync();
 
           return columns;
         });
 
-        Field<ListGraphType<BatteryType>>(
-        "batteryQuery",
+        Field<ListGraphType<BatteriesType>>(
+        "batteriesQuery",
 
         arguments: new QueryArguments(
           new QueryArgument<IdGraphType> { Name = "id"}),
@@ -120,14 +120,14 @@ namespace GraphQL_API.GraphQL
         {
           var id = context.GetArgument<long>("id");
           var batteries = _db
-            .Batteries
+            .Battery
             .Where(_=>_.building_id == id)
                             .ToListAsync();
 
           return batteries;
         });
 
-        Field<CustomerType>(
+        Field<CustomersType>(
         "customerQuery",
 
         arguments: new QueryArguments(
@@ -137,7 +137,7 @@ namespace GraphQL_API.GraphQL
         {
           var id = context.GetArgument<long>("id");
           var customers = _db
-            .Customers
+            .Customer
             .FirstOrDefault(i => i.Id == id);
 
           return customers;

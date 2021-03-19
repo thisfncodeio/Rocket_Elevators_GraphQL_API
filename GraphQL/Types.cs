@@ -7,19 +7,19 @@ using System.Collections.Generic;
 
 namespace GraphQL_API.GraphQL
 {
-  public class FactInterventionType : ObjectGraphType<FactIntervention>
+  public class FactInterventionsType : ObjectGraphType<FactInterventions>
   {
 
     ///////INTERVENTION Type//////////////
-    public FactInterventionType(RailContext db)
+    public FactInterventionsType(RailsApp_development_dbContext db)
     {
-      Name = "Intervention";
+      Name = "Interventions";
 
       Field(x => x.Id);
       Field(x => x.building_id, nullable: true);
       Field(x => x.start_date, nullable: true);
       Field(x => x.end_date, nullable: true);
-      Field<BuildingType>(
+      Field<BuildingsType>(
         "building",
 
         arguments: 
@@ -28,12 +28,12 @@ namespace GraphQL_API.GraphQL
 
         resolve: context => 
         {
-            var building = db.Buildings
+            var buildings = db.Building
                             .Include(_ => _.Address)
                             //.Include(_ => _.Customer)
                             .FirstOrDefault(i => i.Id == context.Source.building_id);
 
-            return building;
+            return buildings;
         });
 
 
@@ -43,9 +43,9 @@ namespace GraphQL_API.GraphQL
 
     //////////////EMPLOYEE TYPE//////////////////////
 
-  public class EmployeeType : ObjectGraphType<Employee>
+  public class EmployeesType : ObjectGraphType<Employees>
   {
-    public EmployeeType(  warehouseContext _db)
+    public EmployeesType(  warehouse_developmentContext _db)
     {
       Name = "Employee";
 
@@ -58,9 +58,9 @@ namespace GraphQL_API.GraphQL
 
   ///////BUILDING TYPE///////////////////
 
-  public class BuildingType : ObjectGraphType<Building>
+  public class BuildingsType : ObjectGraphType<Buildings>
   {
-    public BuildingType(  warehouseContext _db,   dbContext db)
+    public BuildingsType(warehouse_developmentContext _db, RailsApp_development_dbContext db)
     {
       Name = "Building";
 
@@ -75,7 +75,7 @@ namespace GraphQL_API.GraphQL
       Field(x => x.customer_id, nullable: true);
 
       //Field(x => x.Address, type: typeof(AddressType));
-      Field<AddressType>(
+      Field<AddressesType>(
         "address",
 
         arguments: 
@@ -84,12 +84,12 @@ namespace GraphQL_API.GraphQL
 
         resolve: context => 
         {
-            var address = db.Addresses
-                            .FirstOrDefault(i => i.Id == context.Source.address_id);
+            var address = db.Address
+                            .FirstOrDefault(i => i.Id == context.Source.Address.Id);
 
             return address;
         });
-        Field<ListGraphType<BatteryType>>(
+        Field<ListGraphType<BatteriesType>>(
         "batteries",
 
         // arguments: 
@@ -98,14 +98,14 @@ namespace GraphQL_API.GraphQL
 
         resolve: context => 
         {
-            var batteries = db.Batteries
+            var batteries = db.Battery
                                 .Where(ss => ss.building_id == context.Source.Id)
                                 .ToListAsync();
 
             return batteries;
         });
 
-      Field<ListGraphType<BuildingsDetailType>>(
+      Field<ListGraphType<BuildingsDetailsType>>(
       "buildingsDetails",
 
       arguments: 
@@ -115,7 +115,7 @@ namespace GraphQL_API.GraphQL
 
       resolve: context => 
       {
-          var buildingDetails = db.BuildingsDetails
+          var buildingDetails = db.BuildingsDetail
                               .Where(ss => ss.building_id == context.Source.Id)
                               .ToListAsync();
 
@@ -128,15 +128,14 @@ namespace GraphQL_API.GraphQL
   /////////////////ADDRESS TYPE/////////////////////
 
   
-  public class AddressType : ObjectGraphType<Address>
+  public class AddressesType : ObjectGraphType<Addresses>
   {
-    public AddressType()
+    public AddressesType()
     {
       Name = "Address";
 
       Field(x => x.Id);
-      Field(x => x.Address1);
-      Field(x => x.Buildings, type: typeof(ListGraphType<BuildingType>));
+      Field(x => x.Building, type: typeof(ListGraphType<BuildingsType>));
       
 
     } 
@@ -146,9 +145,9 @@ namespace GraphQL_API.GraphQL
 
   //////////////CUSTOMER TYPE////////////////////
 
-   public class CustomerType : ObjectGraphType<Customer>
+   public class CustomersType : ObjectGraphType<Customers>
   {
-    public CustomerType(  dbContext _db)
+    public CustomersType(RailsApp_development_dbContext _db)
     {
       Name = "Customer";
 
@@ -161,7 +160,7 @@ namespace GraphQL_API.GraphQL
       Field(x => x.technical_authority_phone_for_service_);
       Field(x => x.technical_manager_email_for_service);
 
-      Field<ListGraphType<BuildingType>>(
+      Field<ListGraphType<BuildingsType>>(
         "buildings",
 
         arguments: 
@@ -170,7 +169,7 @@ namespace GraphQL_API.GraphQL
 
         resolve: context => 
         {
-             var buildings =_db.Buildings
+             var buildings =_db.Building
                                 // .Include(_ => _.Batteries)
                                  .Where(ss => ss.customer_id == context.Source.Id)
                                  .ToListAsync();
@@ -178,7 +177,7 @@ namespace GraphQL_API.GraphQL
 
             return buildings;
         });
-        Field<ListGraphType<BatteryType>>(
+        Field<ListGraphType<BatteriesType>>(
         "batteries",
 
         arguments: 
@@ -188,13 +187,13 @@ namespace GraphQL_API.GraphQL
         resolve: context => 
         {
             
-            var batteries = _db.Batteries
+            var batteries = _db.Battery
                             .Where(_=>_.Building.customer_id == context.Source.Id)
                             .ToListAsync();
 
             return batteries;
       });
-      Field<ListGraphType<ColumnType>>(
+      Field<ListGraphType<ColumnsType>>(
         "columns",
 
         arguments: 
@@ -204,13 +203,13 @@ namespace GraphQL_API.GraphQL
         resolve: context => 
         {
             
-            var columns = _db.Columns
+            var columns = _db.Column
                             .Where(_=>_.Battery.Building.customer_id == context.Source.Id)
                             .ToListAsync();
 
             return columns;
       });
-      Field<ListGraphType<ElevatorType>>(
+      Field<ListGraphType<ElevatorsType>>(
         "elevators",
 
         arguments: 
@@ -220,7 +219,7 @@ namespace GraphQL_API.GraphQL
         resolve: context => 
         {
             
-            var elevators = _db.Elevators
+            var elevators = _db.Elevator
                             .Where(_=>_.Column.Battery.Building.customer_id == context.Source.Id)
                             .ToListAsync();
 
@@ -231,9 +230,9 @@ namespace GraphQL_API.GraphQL
 
 
 /////////////////BUILDINGS DETAIL TYPE///////////////////
-  public class BuildingsDetailType : ObjectGraphType<BuildingsDetail>
+  public class BuildingsDetailsType : ObjectGraphType<BuildingsDetails>
   {
-    public BuildingsDetailType()
+    public BuildingsDetailsType()
     {
       Name = "BuildingsDetail";
 
@@ -248,9 +247,9 @@ namespace GraphQL_API.GraphQL
 
   ///BATTERY TYPE ////////////////////
 
-    public class BatteryType : ObjectGraphType<Battery>
+    public class BatteriesType : ObjectGraphType<Batteries>
     {
-      public BatteryType(  dbContext _db)
+      public BatteriesType(RailsApp_development_dbContext _db)
       {
         Name = "Battery";
 
@@ -261,7 +260,7 @@ namespace GraphQL_API.GraphQL
         Field(x => x.date_of_last_inspection, nullable: true);
         Field(x => x.certificate_of_operations);
         Field(x => x.building_id, nullable: true);
-        Field<CustomerType>(
+        Field<CustomersType>(
           "customer",
 
           arguments: 
@@ -270,13 +269,13 @@ namespace GraphQL_API.GraphQL
 
           resolve: context => 
           {
-              var building = _db.Buildings
+              var buildings = _db.Building
                               .FirstOrDefault(i => i.Id == context.Source.building_id);
-              var customer = _db.Customers.FirstOrDefault(i => i.Id == building.customer_id);
+              var customer = _db.Customer.FirstOrDefault(i => i.Id == buildings.customer_id);
 
               return customer;
         });
-      Field<BuildingType>(
+      Field<BuildingsType>(
           "building",
 
           arguments: 
@@ -285,12 +284,12 @@ namespace GraphQL_API.GraphQL
 
           resolve: context => 
           {
-              var building = _db.Buildings
+              var buildings = _db.Building
                               .FirstOrDefault(i => i.Id == context.Source.building_id);
 
-              return building;
+              return buildings;
         });
-      Field<ListGraphType<ColumnType>>(
+      Field<ListGraphType<ColumnsType>>(
         "columns",
 
         arguments: 
@@ -300,7 +299,7 @@ namespace GraphQL_API.GraphQL
         resolve: context => 
         {
             
-            var columns = _db.Columns
+            var columns = _db.Column
                             .Where(_=>_.battery_id == context.Source.Id)
                             .ToListAsync();
 
@@ -313,9 +312,9 @@ namespace GraphQL_API.GraphQL
 
     /////COLUMN TYPE /////////////////////
 
-    public class ColumnType : ObjectGraphType<Column>
+    public class ColumnsType : ObjectGraphType<Columns>
     {
-      public ColumnType(  dbContext _db)
+      public ColumnsType(RailsApp_development_dbContext _db)
       {
         Name = "Column";
 
@@ -326,7 +325,7 @@ namespace GraphQL_API.GraphQL
         Field(x => x.information);
         Field(x => x.notes);
         Field(x => x.battery_id, nullable: true);
-        Field<CustomerType>(
+        Field<CustomersType>(
           "customer",
 
           arguments: 
@@ -335,14 +334,14 @@ namespace GraphQL_API.GraphQL
 
           resolve: context => 
           {
-              var battery = _db.Batteries
+              var battery = _db.Battery
                               .FirstOrDefault(i => i.Id == context.Source.battery_id);
-              var customer = _db.Customers
+              var customer = _db.Customer
                               .FirstOrDefault(i => i.Id == battery.Building.customer_id);
 
               return customer;
         });
-        Field<BatteryType>(
+        Field<BatteriesType>(
           "battery",
 
           arguments: 
@@ -351,12 +350,12 @@ namespace GraphQL_API.GraphQL
 
           resolve: context => 
           {
-              var battery = _db.Batteries
+              var battery = _db.Battery
                               .FirstOrDefault(i => i.Id == context.Source.battery_id);
 
               return battery;
         });
-      Field<ListGraphType<ElevatorType>>(
+      Field<ListGraphType<ElevatorsType>>(
         "elevators",
 
         arguments: 
@@ -366,7 +365,7 @@ namespace GraphQL_API.GraphQL
         resolve: context => 
         {
             
-            var elevators = _db.Elevators
+            var elevators = _db.Elevator
                             .Where(_=>_.column_id == context.Source.Id)
                             .ToListAsync();
 
@@ -380,9 +379,9 @@ namespace GraphQL_API.GraphQL
 
 
 
-    public class ElevatorType : ObjectGraphType<Elevator>
+    public class ElevatorsType : ObjectGraphType<Elevators>
     {
-      public ElevatorType(  dbContext _db)
+      public ElevatorsType(RailsApp_development_dbContext _db)
       {
         Name = "Elevator";
 
@@ -395,7 +394,7 @@ namespace GraphQL_API.GraphQL
         Field(x => x.status);
         Field(x => x.certificate_of_inspection);
         Field(x => x.column_id, nullable: true);
-        Field<CustomerType>(
+        Field<CustomersType>(
           "customer",
 
           arguments: 
@@ -404,14 +403,14 @@ namespace GraphQL_API.GraphQL
 
           resolve: context => 
           {
-              var column = _db.Columns
+              var column = _db.Column
                               .FirstOrDefault(i => i.Id == context.Source.column_id);
-              var customer = _db.Customers
+              var customer = _db.Customer
                               .FirstOrDefault(i => i.Id == column.Battery.Building.customer_id);
 
               return customer;
         });
-        Field<ColumnType>(
+        Field<ColumnsType>(
           "column",
           arguments: 
             new QueryArguments(
@@ -419,7 +418,7 @@ namespace GraphQL_API.GraphQL
 
           resolve: context => 
           {
-              var column = _db.Columns
+              var column = _db.Column
                               .FirstOrDefault(i => i.Id == context.Source.column_id);
 
               return column;

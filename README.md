@@ -77,7 +77,7 @@ that are needed for the queries. For example, a building type is defined as such
 
 ```C#
 
-    public BuildingType(cindy_okino_warehouseContext _db, cindy_okino_dbContext db)
+    public BuildingType(warehouse_developmentContext _db, RailsApp_development_dbContext db)
     {
       Name = "Building";
 
